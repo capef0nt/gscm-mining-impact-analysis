@@ -288,7 +288,7 @@ Inspiration & Academic Reference
 This project is inspired by:
 
 Ngcobo, N., Pretorius, J.-H., & van der Merwe, A. (2022).
-The Impact of Green Supply Chain Management Practices on Operational Efficiency within the Mining Sector.
+The Impact of Green Supply Chain Management Practices on Operational Efficiency within the Mining Sector in South Africa.
 
 Their study explored how GSCM practices influence operational efficiency in two mines (Lonmin and Impala), using survey-based PLS-SEM.
 
@@ -367,3 +367,6 @@ This toolkit aims to evolve that research into a realistic, data-driven, industr
 Mining engineers, ESG specialists, data scientists, SEM researchers — all welcome.
 
 Submit pull requests or open issues to get involved.
+
+Author : B. C Marimbita 
+email : bcm637@gmail.com
