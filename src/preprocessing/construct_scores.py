@@ -1,13 +1,14 @@
-# ###Utilities for computing construct scores from survey data.
+"""
+Utilities for computing construct scores from survey data.
 
-# #High-level flow:
-# - Input: respondent-level survey DataFrame (one row per person)
-# - Group by site_id
-# - Compute mean of each indicator per site
-# - Compute simple construct scores per site (mean of indicators per construct)
+High-level flow:
+- Input: respondent-level survey DataFrame (one row per person)
+- Group by site_id
+- Compute mean of each indicator per site
+- Compute simple construct scores per site (mean of indicators per construct)
 
-# This module relies on model configuration from src.config.model_config.
-# ###
+This module relies on model configuration from src.config.model_config.
+"""
 
 from __future__ import annotations
 
@@ -152,4 +153,3 @@ if __name__ == "__main__":
 
     print("\n--- Construct Scores (Per Site) ---")
     print(site_constructs)
-
