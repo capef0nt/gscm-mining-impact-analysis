@@ -1,5 +1,5 @@
 """
-Utilities for computing construct scores from survey data.
+Utilities for computing construct scores from the collected survey data.
 
 High-level flow:
 - Input: respondent-level survey DataFrame (one row per person)
