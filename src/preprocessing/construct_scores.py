@@ -128,9 +128,9 @@ def build_site_construct_table(survey_df: pd.DataFrame) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    # -------------------------------------------------
+   
     # Example usage: load data/examples/survey_example.csv
-    # -------------------------------------------------
+  
     import os
 
     EXAMPLE_PATH = os.path.join("data", "examples", "survey_example.csv")
