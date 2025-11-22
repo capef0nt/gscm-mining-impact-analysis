@@ -1,5 +1,5 @@
-site_id,reporting_period,uptime_percent,unplanned_downtime_hours,tons_per_hour,rework_rate_percent,energy_kwh_per_ton,water_m3_per_ton,cost_per_ton,maintenance_cost_per_ton,on_time_delivery_percent,supplier_defect_percent,ltifr,trifr,safety_audits_passed_percent,employees_competent_percent
-A01,2024,92.4,128.0,354.7,1.8,47.5,0.86,612.5,149.3,91.2,2.4,0.52,0.87,95.0,88.0
-A02,2024,95.1,76.5,412.3,1.2,42.3,0.78,589.0,132.5,94.5,1.8,0.35,0.65,97.0,91.5
-A03,2024,89.7,150.2,298.4,2.5,50.1,0.92,635.0,165.0,88.0,3.1,0.75,1.10,92.0,85.0
-A04,2024,93.5,110.0,375.6,1.5,45.0,0.80,600.0,140.0,92.5,2.0,0.40,0.70,96.0,89.0
+site_id,reporting_period,uptime_percent,unplanned_downtime_hours,tons_per_hour,rework_rate_percent,energy_kwh_per_ton,water_m3_per_ton,cost_per_ton,maintenance_cost_per_ton,on_time_delivery_percent,supplier_defect_percent,ltifr,trifr,sifr,fifr,safety_audits_passed_percent,employees_competent_percent,frontline_stoppages_percent
+A01,2024,92.4,128.0,354.7,1.8,47.5,0.86,612.5,149.3,91.2,2.4,0.52,0.87,0.30,0.02,95.0,88.0,72
+A02,2024,95.1,76.5,412.3,1.2,42.3,0.78,589.0,132.5,94.5,1.8,0.35,0.65,0.10,0.00,97.0,91.5,65
+A03,2024,89.7,150.2,298.4,2.5,50.1,0.92,635.0,165.0,88.0,3.1,0.75,1.10,0.60,0.05,92.0,85.0,58
+A04,2024,93.5,110.0,375.6,1.5,45.0,0.80,600.0,140.0,92.5,2.0,0.40,0.70,0.20,0.01,96.0,89.0,69
