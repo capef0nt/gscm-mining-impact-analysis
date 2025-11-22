@@ -52,12 +52,28 @@ def main(method: str = "simple") -> None:
     # 1) Load survey data
     print(f"Loading survey data from: {SURVEY_PATH}")
     survey_df = load_csv_or_raise(SURVEY_PATH, "Survey")
+    print(f"The data loaded{survey_df}")
 
     # 2) Compute site-level construct scores
     print("Computing site-level construct scores (reflective)...")
     site_constructs = build_site_construct_table(survey_df)
     print("\n--- Site Construct Scores (head) ---")
     print(site_constructs.head())
+
+    # TEMP FIX: map company-based IDs to site IDs so they match KPI file
+    id_map = {
+        "Comp_X": "A01",
+        "Comp_Y": "A02",
+        "Comp_Z": "A03",
+    }
+
+    site_constructs["site_id"] = site_constructs["site_id"].replace(id_map)
+
+    print("\n--- Site Construct Scores AFTER ID FIX (head) ---")
+    print(site_constructs.head())
+    print("Survey constructs site_ids:", site_constructs["site_id"].unique())
+
+
 
     # 3) Load KPI data
     print(f"\nLoading KPI data from: {KPI_PATH}")
@@ -68,6 +84,12 @@ def main(method: str = "simple") -> None:
     site_kpis = build_site_kpi_table(kpi_df, method=method)
     print("\n--- Site KPI Table (head) ---")
     print(site_kpis.head())
+
+
+    #quick check of the dataset before merging 
+    print("Survey constructs site_ids:", site_constructs["site_id"].unique())
+    print("KPI site_ids:", site_kpis["site_id"].unique())
+
 
     # 5) Merge on site_id
     print("\nMerging constructs and KPIs on 'site_id'...")
