@@ -273,6 +273,48 @@ def build_site_kpi_table(
 
     return site_kpis
 
+def compute_safety_perf(df: pd.DataFrame, method: str = "simple") -> pd.Series:
+    """
+    Compute SAFETY_PERF (safety performance index) per site.
+
+    method:
+        - "simple": equal-weighted average of standardized components
+        - "weighted": uses SAFETY_WEIGHTS dictionary
+    """
+    tmp = df.copy()
+    components: Dict[str, pd.Series] = {}
+
+    # High-is-better KPIs
+    for kpi in SAFETY_KPIS_HIGH_IS_BETTER:
+        components[kpi] = _standardize_series(tmp[kpi])
+
+    # Low-is-better KPIs (flip sign)
+    for kpi in SAFETY_KPIS_LOW_IS_BETTER:
+        components[kpi] = -_standardize_series(tmp[kpi])
+
+    if method == "simple":
+        comp_df = pd.DataFrame(components)
+        safety_perf = comp_df.mean(axis=1)
+    elif method == "weighted":
+        weighted_sum = pd.Series(0.0, index=df.index)
+        total_weight = 0.0
+
+        for kpi, series in components.items():
+            w = SAFETY_WEIGHTS.get(kpi, 0.0)
+            if w == 0.0:
+                continue
+            weighted_sum += w * series
+            total_weight += w
+
+        if total_weight == 0:
+            safety_perf = weighted_sum
+        else:
+            safety_perf = weighted_sum / total_weight
+    else:
+        raise ValueError(f"Unknown method for SAFETY_PERF: {method}")
+
+    return safety_perf
+
 
 # ---------------------------------------------------------------------------
 # Example usage
