@@ -47,11 +47,15 @@ OE_KPIS_LOW_IS_BETTER: List[str] = [
 SAFETY_KPIS_HIGH_IS_BETTER: List[str] = [
     "safety_audits_passed_percent",
     "employees_competent_percent",
+    "frontline_stoppages_percent", 
+   #"critical_control_compliance_percent"
 ]
 
 SAFETY_KPIS_LOW_IS_BETTER: List[str] = [
     "ltifr",
     "trifr",
+    "sifr",   
+    "fifr"
 ]
 
 
@@ -67,11 +71,15 @@ OE_WEIGHTS: Dict[str, float] = {
 }
 
 SAFETY_WEIGHTS: Dict[str, float] = {
-    "ltifr": 0.40,
-    "trifr": 0.30,
-    "safety_audits_passed_percent": 0.20,
-    "employees_competent_percent": 0.10,
+    "fifr": 0.30,
+    "sifr": 0.25,
+    "ltifr": 0.20,
+    "trifr": 0.10,
+    "safety_audits_passed_percent": 0.10,
+    "employees_competent_percent": 0.05,
+    #"frontline_stoppages_percent": 0.05,  # optional
 }
+
 
 
 # ---------------------------------------------------------------------------

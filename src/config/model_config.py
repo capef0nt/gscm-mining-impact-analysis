@@ -257,11 +257,14 @@ KPI_CATEGORIES: Dict[str, List[str]] = {
         "supplier_defect_percent",
     ],
     "safety": [
-        "ltifr",
-        "trifr",
-        "safety_audits_passed_percent",
-        "employees_competent_percent",
-    ],
+        "sifr",
+        "fifr",
+        "frontline_stoppages_percent",
+        "near_miss_reports",
+        "critical_control_compliance_percent",
+        "iso_45001_certified",
+    ]
+
 }
 
 
