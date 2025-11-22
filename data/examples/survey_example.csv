@@ -1,4 +1,4 @@
 respondent_id,site_id,company_id,job_title,department,role_level,years_at_company,mine_type,automation_level,regulatory_pressure,customer_pressure,top_mgmt_commitment,GPUR_1,GPUR_2,GPUR_3,GPUR_4,GOPS_1,GOPS_2,GOPS_3,GOPS_4,GLOG_1,GLOG_2,GLOG_3,GTRN_1,GTRN_2,GTRN_3,GCOL_1,GCOL_2,GCOL_3,SUPINT_1,SUPINT_2,SUPINT_3,MAINT_1,MAINT_2,MAINT_3,COMP_1,COMP_2,COMP_3,OE_1,OE_2,OE_3,OE_4,OE_5,EP_1,EP_2,EP_3,EP_4,EP_5
-R001,A01,Comp_X,Maintenance Engineer,Maintenance,Supervisor,4-7,Platinum,Medium,4,3,4,4,5,4,4,4,4,5,4,3,4,3,4,4,4,3,4,4,4,4,4,4,4,5,4,4,4,4,4,5,4,4,4,4,4,4,4,4
-R002,A02,Comp_Y,Operations Manager,Operations,Manager,8-12,Gold,High,5,4,5,5,4,5,4,5,5,4,5,4,5,5,4,5,5,5,5,4,5,5,5,4,5,5,5,5,5,4,5,5,5,5,5,5,5,5
-R003,A03,Comp_Z,Safety Officer,Safety,Staff,1-3,Silver,Low,3,2,3,3,3,3,2,3,3,2,3,2,3,3,2,3,3,3,3,2,3,3,3,2,3,3,3,3,3,2,3,3,3,3,3,3,3,3
+R001,A01,Comp_X,Maintenance Engineer,Maintenance,Supervisor,4-7,Platinum,Medium,4,3,4,4,5,4,4,4,4,5,4,3,4,3,4,4,4,3,4,4,4,4,4,4,4,5,4,4,4,4,4,5,4,4,4,4,4,4,4
+R002,A02,Comp_Y,Operations Manager,Operations,Manager,8-12,Gold,High,5,4,5,5,4,5,4,5,5,4,5,4,5,5,4,5,5,5,5,4,5,5,5,4,5,5,5,5,5,4,5,5,5,5,5,5,5,5,4
+R003,A03,Comp_Z,Safety Officer,Safety,Staff,1-3,Silver,Low,3,2,3,3,3,3,2,3,3,2,3,2,3,3,2,3,3,3,3,2,3,3,3,2,3,3,3,3,3,2,3,3,3,3,3,3,3,3,4

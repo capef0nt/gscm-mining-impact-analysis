@@ -60,15 +60,6 @@ def main(method: str = "simple") -> None:
     print("\n--- Site Construct Scores (head) ---")
     print(site_constructs.head())
 
-    # TEMP FIX: map company-based IDs to site IDs so they match KPI file
-    id_map = {
-        "Comp_X": "A01",
-        "Comp_Y": "A02",
-        "Comp_Z": "A03",
-    }
-
-    site_constructs["site_id"] = site_constructs["site_id"].replace(id_map)
-
     print("\n--- Site Construct Scores AFTER ID FIX (head) ---")
     print(site_constructs.head())
     print("Survey constructs site_ids:", site_constructs["site_id"].unique())
