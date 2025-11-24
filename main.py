@@ -16,6 +16,8 @@ import pandas as pd
 
 from src.preprocessing.construct_scores import build_site_construct_table
 from src.preprocessing.kpi_scores import build_site_kpi_table
+from src.analysis.correlations import correlation_table
+import matplotlib.pyplot as plt
 
 
 # ---------------------------------------------------------------------------
@@ -93,6 +95,12 @@ def main(method: str = "simple") -> None:
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     merged.to_csv(MERGED_OUTPUT_PATH, index=False)
     print(f"\nMerged dataset saved to: {MERGED_OUTPUT_PATH}\n")
+
+    print("\n--- Correlation Matrix ---")
+    print(correlation_table(merged))
+
+
+
 
 
 if __name__ == "__main__":
