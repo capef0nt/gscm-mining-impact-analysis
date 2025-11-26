@@ -131,4 +131,4 @@ def main(method: str = "simple", use_synthetic: bool = False) -> None:
 if __name__ == "__main__":
     # Change use_synthetic=True when you want to run the analysis on
     # site_level_synthetic.csv instead of rebuilding from survey/KPIs.
-    main(method="simple", use_synthetic=True)
+    main(method="weighted", use_synthetic=True)
