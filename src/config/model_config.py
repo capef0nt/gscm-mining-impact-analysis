@@ -231,6 +231,8 @@ CORE_KPIS: List[str] = [
     # Safety
     "ltifr",
     "trifr",
+    "sifr",
+    "fifr"
     "safety_audits_passed_percent",
     "employees_competent_percent",
 ]
@@ -257,6 +259,8 @@ KPI_CATEGORIES: Dict[str, List[str]] = {
         "supplier_defect_percent",
     ],
     "safety": [
+        "ltifr",
+        "trifr",
         "sifr",
         "fifr",
         "frontline_stoppages_percent",
