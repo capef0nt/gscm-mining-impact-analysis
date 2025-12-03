@@ -15,15 +15,28 @@ Assumptions:
 
 This is a simplified, educational approximation of PLS-SEM outer model logic.
 """
-
 from __future__ import annotations
 
+import os
+import sys
 from typing import Dict, List, Tuple
 
 import numpy as np
 import pandas as pd
 
+# ---------------------------------------------------------------------------
+# Make sure the project root is on sys.path so `src` can be imported
+# ---------------------------------------------------------------------------
+THIS_FILE = os.path.abspath(__file__)               # .../src/analysis/outer_model.py
+ANALYSIS_DIR = os.path.dirname(THIS_FILE)           # .../src/analysis
+SRC_DIR = os.path.dirname(ANALYSIS_DIR)             # .../src
+PROJECT_ROOT = os.path.dirname(SRC_DIR)             # project root: GSCM-mining-impact-analysis
+
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
 from src.config.model_config import CONSTRUCTS, ConstructConfig
+
 
 
 # ---------------------------------------------------------------------------
@@ -180,16 +193,17 @@ if __name__ == "__main__":
     import os
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    EXAMPLE_PATH = os.path.join(BASE_DIR, "data", "examples", "survey_example.csv")
+    SYNTH_PATH = os.path.join(BASE_DIR, "data", "outputs", "survey_synthetic.csv")
 
-    if not os.path.exists(EXAMPLE_PATH):
+    if not os.path.exists(SYNTH_PATH):
         raise FileNotFoundError(
-            f"Example file not found: {EXAMPLE_PATH}\n"
-            "Make sure data/examples/survey_example.csv exists."
+            f"Synthetic survey not found: {SYNTH_PATH}\n"
+            "Run the synthetic survey generator first."
         )
 
-    print(f"Loading example survey data from: {EXAMPLE_PATH}")
-    demo_df = pd.read_csv(EXAMPLE_PATH)
+    print(f"Loading synthetic survey data from: {SYNTH_PATH}")
+    demo_df = pd.read_csv(SYNTH_PATH)
+
 
     outer_stats = compute_outer_model(demo_df)
     print("\n--- Outer model stats (demo) ---")

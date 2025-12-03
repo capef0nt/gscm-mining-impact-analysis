@@ -1,29 +1,32 @@
 """
-Generate synthetic respondent-level survey data based on site-level constructs.
+Generate realistic synthetic respondent-level survey data based on
+site-level construct scores.
 
 Input:
     data/outputs/site_level_synthetic.csv
-        - One row per site (e.g. SYN_001, SYN_002, ...)
-        - Includes latent construct scores like:
-            GPUR, GOPS, GLOG, GTRN, GCOL,
-            SUPINT, MAINT, COMP,
-            OE, EP
-        - Plus KPI columns (which we ignore for survey generation).
+        - One row per site (site_id)
+        - Columns include the latent constructs defined in CONSTRUCTS
+          (e.g., GPUR, GOPS, GLOG, GTRN, GCOL, SUPINT, MAINT, COMP, OE, EP)
 
 Output:
     data/outputs/survey_synthetic.csv
         - Multiple rows per site (respondents_per_site each)
         - Columns:
             respondent_id, site_id, company_id,
-            GPUR_1.., GOPS_1.., GLOG_1.., ... OE_1.., EP_1..
+            and all indicator columns in CONSTRUCTS[code].indicators.
 
-Design:
-- For each site:
-    - For each construct in model_config.CONSTRUCTS:
-        - Try to use the site-level construct score as latent center.
-        - If missing, draw a reasonable latent score (2.5–4.0).
-    - For each indicator of that construct:
-        - Generate a noisy Likert response (1–5) around the latent center.
+Realistic generation logic:
+    For each site s and construct c:
+        1. Take site-level score μ_sc (from site_level_synthetic).
+        2. For each respondent r at site s:
+            latent_scr = μ_sc + N(0, latent_sigma)
+            indicator_ij = latent_scr + N(0, indicator_sigma)
+            then round/clamp to Likert 1..5.
+
+This makes:
+    - Items within a construct correlated (same latent per respondent).
+    - Different respondents at same site similar but not identical.
+    - Different sites can have different mean construct levels.
 """
 
 from __future__ import annotations
@@ -36,17 +39,17 @@ import numpy as np
 import pandas as pd
 
 # -------------------------------------------------------------------
-# Ensure PROJECT_ROOT is on sys.path so `src.*` imports work
+# Path setup so we can import src.config.model_config
 # -------------------------------------------------------------------
 THIS_FILE = os.path.abspath(__file__)
-SRC_DIR = os.path.dirname(THIS_FILE)              # .../src/data_generation
-PROJECT_ROOT = os.path.dirname(SRC_DIR)           # .../src
-PROJECT_ROOT = os.path.dirname(PROJECT_ROOT)      # project root
+DATA_GEN_DIR = os.path.dirname(THIS_FILE)                  # .../src/data_generation
+SRC_DIR = os.path.dirname(DATA_GEN_DIR)                    # .../src
+PROJECT_ROOT = os.path.dirname(SRC_DIR)                    # project root
 
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from src.config.model_config import CONSTRUCTS, ConstructConfig  # noqa: E402
+from src.config.model_config import CONSTRUCTS  # noqa: E402
 
 
 SITE_LEVEL_PATH = os.path.join(
@@ -57,40 +60,42 @@ OUTPUT_PATH = os.path.join(
 )
 
 
-def _sample_likert_around(
+def _likert_from_latent(
     rng: np.random.Generator,
-    center: float,
-    scale: float = 0.6,
+    latent_value: float,
+    indicator_sigma: float = 0.5,
 ) -> int:
     """
-    Draw a single Likert response (1–5) around a given latent center.
+    Given a latent construct value (~1..5), generate a Likert item.
 
-    Args:
-        rng: numpy random generator
-        center: latent score around which responses cluster (~1–5)
-        scale: standard deviation of the noise
-
-    Returns:
-        Integer in {1, 2, 3, 4, 5}
+    - Add normal noise with std = indicator_sigma
+    - Clip to [1, 5]
+    - Round to nearest integer
     """
-    val = rng.normal(loc=center, scale=scale)
-    val = np.clip(val, 1.0, 5.0)
+    val = latent_value + rng.normal(loc=0.0, scale=indicator_sigma)
+    val = float(np.clip(val, 1.0, 5.0))
     return int(np.rint(val))
 
 
 def generate_synthetic_survey(
-    respondents_per_site: int = 5,
+    respondents_per_site: int = 8,
+    latent_sigma: float = 0.4,
+    indicator_sigma: float = 0.5,
     random_seed: int = 42,
 ) -> pd.DataFrame:
     """
     Generate respondent-level synthetic survey data.
 
-    For each site in site_level_synthetic.csv:
-        - Create `respondents_per_site` respondents.
-        - For each construct in CONSTRUCTS:
-            - Use site-level construct score if present,
-              else draw a fallback latent score.
-            - Generate all indicator items using a Likert distribution.
+    Args:
+        respondents_per_site:
+            Number of respondents to simulate for each site.
+        latent_sigma:
+            Standard deviation of respondent-level latent scores around
+            the site-level construct score.
+        indicator_sigma:
+            Standard deviation of indicator-level noise around the latent score.
+        random_seed:
+            RNG seed for reproducibility.
 
     Returns:
         DataFrame with columns:
@@ -102,7 +107,7 @@ def generate_synthetic_survey(
         raise FileNotFoundError(
             f"Site-level synthetic data not found at:\n  {SITE_LEVEL_PATH}\n"
             "Run your site-level synthetic generation first "
-            "(e.g., generate_synthetic_sites_realistic.py)."
+            "(e.g., scripts/generate_site_level_synthetic.py)."
         )
 
     site_df = pd.read_csv(SITE_LEVEL_PATH)
@@ -115,55 +120,58 @@ def generate_synthetic_survey(
 
     rows: List[Dict] = []
 
-    for _, site in site_df.iterrows():
-        site_id = site["site_id"]
+    # Iterate over each synthetic site
+    for _, site_row in site_df.iterrows():
+        site_id = site_row["site_id"]
+        # Simple placeholder company_id; can later be replaced with real mapping.
+        company_id = site_row.get("company_id", "SyntheticCo")
 
-        # Create multiple respondents per site
-        for i in range(respondents_per_site):
+        for r in range(respondents_per_site):
+            respondent_id = f"{site_id}_R{r+1}"
             row: Dict = {
-                "respondent_id": f"{site_id}_R{i+1}",
+                "respondent_id": respondent_id,
                 "site_id": site_id,
-                "company_id": "SyntheticCo",  # placeholder; can be extended
+                "company_id": company_id,
             }
 
-            # For every construct configured in the model
+            # For every construct in the config, generate indicators
             for code, cfg in CONSTRUCTS.items():
-                # Try to pull site-level construct score; fall back if missing
-                site_construct_score = site.get(code, np.nan)
+                # Try to pull site-level construct score; if missing, draw fallback
+                site_construct_score = site_row.get(code, np.nan)
 
                 if not np.isfinite(site_construct_score):
-                    # If SDV or merging didn't include this construct,
-                    # we still want it to exist for outer-model analysis.
-                    # Draw a reasonable value in the typical Likert "good-ish" range.
+                    # Fallback: pick a plausible "mid-high" Likert region
                     site_construct_score = rng.uniform(2.5, 4.0)
 
-                # Generate all indicators for this construct
-                for indicator in cfg.indicators:
-                    row[indicator] = _sample_likert_around(
+                # Respondent-specific latent score around the site mean
+                latent_resp = site_construct_score + rng.normal(
+                    loc=0.0, scale=latent_sigma
+                )
+                latent_resp = float(np.clip(latent_resp, 1.0, 5.0))
+
+                # Generate indicators for this construct
+                for ind in cfg.indicators:
+                    row[ind] = _likert_from_latent(
                         rng,
-                        center=float(site_construct_score),
-                        scale=0.6,  # controls within-construct variability
+                        latent_resp,
+                        indicator_sigma=indicator_sigma,
                     )
 
             rows.append(row)
 
-    return pd.DataFrame(rows)
+    df = pd.DataFrame(rows)
+    return df
 
 
-def main(
-    respondents_per_site: int = 5,
-    random_seed: int = 42,
-) -> None:
+def main() -> None:
     print(f"Project root: {PROJECT_ROOT}")
     print(f"Loading site-level data from: {SITE_LEVEL_PATH}")
-    print(
-        f"Generating synthetic survey with "
-        f"{respondents_per_site} respondents per site..."
-    )
 
     df = generate_synthetic_survey(
-        respondents_per_site=respondents_per_site,
-        random_seed=random_seed,
+        respondents_per_site=8,
+        latent_sigma=0.4,
+        indicator_sigma=0.5,
+        random_seed=42,
     )
 
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
@@ -175,6 +183,12 @@ def main(
     print("\n--- Survey head ---")
     print(df.head())
 
+    # Quick sanity check: variance of one construct's indicators
+    gpur_cols = [c for c in df.columns if c.startswith("GPUR_")]
+    if gpur_cols:
+        print("\nGPUR indicator variances (sanity check):")
+        print(df[gpur_cols].var())
+
 
 if __name__ == "__main__":
-    main(respondents_per_site=5, random_seed=42)
+    main()
