@@ -200,6 +200,9 @@ Each row = one mining site.
 ### Safety KPIs
 - ltifr  
 - trifr  
+- sifr
+- fifr
+- frontline_stoppages_percent
 - near_miss_rate  
 - severity_rate_hours  
 - safety_incidents_per_year  
